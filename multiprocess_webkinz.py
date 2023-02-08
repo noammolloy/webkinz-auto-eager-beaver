@@ -151,6 +151,7 @@ def recurse(curr_node: Node,
                     # add to possible_words at the length
                     possible_words[len(word)-min_length].append(word)
                     # can I add a break here?
+                    break
             # returning if there are no possible words with this current string
         if not match:
             return possible_words
@@ -188,7 +189,7 @@ def game():
     alt_tab()
     g_input = multiprocess_imaging.get_board()
     alt_tab()
-    #g_input = editable_input(g_input)
+    g_input = editable_input(g_input)
 
     # g_input = ['oeotdos', 'edwuuftm', 'mzoylep', 'tlsvwhal', 'euaesbp', 'lkwlldss', 'yoapyre']
     # g_input = ['adikfyc', 'ahfpyvfv', 'oedwlcs', 'gauflaec', 'yupndki', 'osnvabui', 'rdehpgk']

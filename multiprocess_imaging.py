@@ -5,8 +5,6 @@ import pyautogui
 import time
 import cv2
 from multiprocessing import Process, Pool
-
-
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
 
 
@@ -16,6 +14,8 @@ def get_column(curr_x, curr_y, num_in_column):
     width = 69
     height = 60
     column = ""
+    uglies = {'': '_', 'qu': 'q', '0': 'o', '@': 'o', ')': 'o', '@)': 'o', '|': 'i', '1': 'i', '{': 'i', '5': 's', '§': 's',
+         '4': 'p', 'pp': 'p', ':': 'p'}
     for _ in range(num_in_column):
         im = ImageGrab.grab(bbox=(curr_x, curr_y, curr_x + width, curr_y + height))
         curr_y += 78  # to next row
@@ -41,43 +41,45 @@ def get_column(curr_x, curr_y, num_in_column):
             # im = cv2.bilateralFilter(im, 15, 80, 80)
             text = pytesseract.image_to_string(im, lang='eng',
                                                config='--psm 10 ')
-            text = text[:-1].lower()
-        if text == '':
-            text = 'b'
+            text = text[:-1].lower()  # gets rid of extra '\n' at the end and lower cases
 
-        #cv2.imshow('asd', im)
-        #cv2.waitKey(0)
-        #cv2.destroyAllWindows()
+        # cv2.imshow('asd', im)
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()
 
-        if text == 'qu':
-            text = 'q'
-        if '0' in text:
-            text = 'o'
-        elif '@' in text:
-            text = 'o'
-        elif ')' in text:
-            text = 'o'
-        if '|' in text:
-            text = 'i'
-        elif '1' in text:
-            text = 'i'
-        elif '{' in text:
-            text = 'i'
-        if '5' in text:
-            text = 's'
-        elif '§' in text:
-            text = 's'
-        if '4' in text:
-            text = 'p'
-        elif 'pp' in text:
-            text = 'p'
-        elif ':' in text:
-            text = 'p'
-        if text[0] in ['\'', '"', '‘', '`']:
+        # if text == 'qu':
+        #     text = 'q'
+        # if '0' in text:
+        #     text = 'o'
+        # elif '@' in text:
+        #     text = 'o'
+        # elif ')' in text:
+        #     text = 'o'
+        # if '|' in text:
+        #     text = 'i'
+        # elif '1' in text:
+        #     text = 'i'
+        # elif '{' in text:
+        #     text = 'i'
+        # if '5' in text:
+        #     text = 's'
+        # elif '§' in text:
+        #     text = 's'
+        # if '4' in text:
+        #     text = 'p'
+        # elif 'pp' in text:
+        #     text = 'p'
+        # elif ':' in text:
+        #     text = 'p'
+
+        if len(text) > 0 and text[0] in ['\'', '"', '‘', '`']:
             text = text[1:]
+
+        text = uglies.get(text, text)  # try to find it in the dictionary of uglies and if not there keep the same
+
         if len(text) == 2:
             text = text[1]
-        column += text          # put all letters in an array first then use .join
+        column += text          # put all letters in an array first then use .join maybe?
     return column
 
 
